@@ -6,28 +6,18 @@
       dark
     >
       <v-icon
-        class="white--text mr-2"
+        class="white--text mr-2 center"
       >
-        mdi-forum
+        mdi-account-voice
       </v-icon>
 
       <span
         class="text-h6 font-weight-bold white--text"
       >
-        Low-Bandwith-Video-Chat
+        Simon Says
       </span>
 
       <v-spacer></v-spacer>
-
-      <v-btn
-        target="_blank"
-        text
-        class="white--text"
-        @click="handleSettiingsClick"
-      >
-        <v-icon left>mdi-cog</v-icon>
-        <span class="mr-2">Settings</span>
-      </v-btn>
     </v-app-bar>
 
     <v-main>
@@ -48,10 +38,6 @@ export default {
   data: () => ({
     //
   }),
-
-  created() {
-    this.$store.dispatch('bindUsers')
-  },
 
   methods: {
     ...mapMutations(['setOpenDialog']),

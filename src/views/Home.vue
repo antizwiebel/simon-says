@@ -7,52 +7,40 @@
     >
       <TutorialStepper @close-dialogue="handleCloseDialogue" :newUser="newUser"></TutorialStepper>
     </v-dialog>
-    <v-row>
-      <v-col cols="12" md="5">
         <WebcamAndPrediction />
-      </v-col>
-      <v-col cols="12" md="7">
-        <Peers />
-        <Chat />
-      </v-col>
-    </v-row>
+
+        <audio id="audiotag1" src="../assets/Monkeys-Spinning-Monkeys.mp3" preload="auto"></audio>
+        <v-btn text @click="play_single_sound" ref="audioBtn">Play that funky music</v-btn>
   </v-container>
 </template>
 
 <script>
 import '@tensorflow/tfjs'
 
-import Peers from '../components/Peers.vue'
-import Chat from '../components/Chat.vue'
+//import Peers from '../components/Peers.vue'
+//import Chat from '../components/Chat.vue'
 import TutorialStepper from '../components/TutorialStepper.vue'
 import WebcamAndPrediction from '../components/WebcamAndPrediction.vue'
 
 import {
     mapState, mapMutations
   } from 'vuex'
-import {
-  db
-} from '@/store/db'
 
 
 export default {
   components: {
-     Peers, Chat, TutorialStepper, WebcamAndPrediction
+     TutorialStepper, WebcamAndPrediction
   },
   data() {
     return {
       dialog: true,
       model: null,
       url: 'https://teachablemachine.withgoogle.com/models/erVKbrLsV/',
-      nickname: "",
-      emojiColor: "",
-      emojiGender: "",
-      userKey: "",
-      newUser: true,
+      newUser: true
     }
   },
 
-  created() {
+  mounted() {
     document.addEventListener('beforeunload', this.leaving);
     window.addEventListener('beforeunload', this.leaving)
   },
@@ -77,26 +65,14 @@ export default {
       this.emojiColor = emojiColor
       this.emojiGender = emojiGender
       this.dialog = false
-
-      if (this.newUser) {
-        let userKey = db.ref('users').push().getKey()
-        this.userKey = userKey
-        this.$store.dispatch('addNewUser', {nickname, emojiColor, emojiGender, userKey, heartEmojiColor, notPresentEmojiType})
-        this.setUserKey(userKey) 
-        this.newUser = false
-      } else {
-        let userKey = this.userKey
-        this.$store.dispatch('updateUserSettings', {nickname, emojiColor, emojiGender, userKey, heartEmojiColor, notPresentEmojiType})
-        this.setUserKey(userKey) 
-      }
       this.setOpenDialog(false)
       this.setEmojiSettings({emojiGender, emojiColor, heartEmojiColor, notPresentEmojiType})
       
     },
-    leaving: function() {
-      let userKey = this.userKey
-      this.$store.dispatch('deleteUser', {userKey})
-    },
+    play_single_sound: function() {
+      document.getElementById('audiotag1').pause();
+      document.getElementById('audiotag1').play();
+    }
   },
   computed: {
     ...mapState(['users', 'currentPrediction', 'openDialog']),

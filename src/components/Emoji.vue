@@ -51,7 +51,7 @@ export default {
         case 'no-camera':
           return '❌'
         default:
-          return '❓'
+          return '👨🏻'
       }
     },
     presentEmoji: function() {

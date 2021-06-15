@@ -1,12 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {
-  vuexfireMutations,
-  firebaseAction
-} from 'vuexfire'
-import {
-  db
-} from '@/store/db'
 
 Vue.use(Vuex)
 
@@ -21,18 +14,12 @@ export default new Vuex.Store({
     // state that will be shared with others
     currentState: 'no-webcam',
     openDialog: 'true',
-    emojiIdentity: {
-      skinTone: 'light',
-      gender: 'male',
-    },
-    heartEmojiColor: 'red', 
-    notPresentEmojiType: 'coffee'
+    signs: [],
   },
   getters: {
 
   },
   mutations: {
-    ...vuexfireMutations,
     setPrediction(state, predictions) {
       // save TM response with all classes
       state.predictions = predictions
@@ -64,54 +51,15 @@ export default new Vuex.Store({
 
       state.currentPrediction = currentPrediction
     },
-    setUserKey(state, userKey) {
-      state.userKey = userKey
-    },
-    setEmojiSettings(state, {emojiGender, emojiColor, heartEmojiColor, notPresentEmojiType}) {
-      console.log(emojiGender, emojiColor)
-      state.emojiIdentity.gender = emojiGender
-      state.emojiIdentity.skinTone = emojiColor
-      state.heartEmojiColor = heartEmojiColor
-      state.notPresentEmojiType = notPresentEmojiType
-    },
     setOpenDialog(state, openDialog) {
       state.openDialog = openDialog
     },
     setCurrentState(state, currrentState) {
       state.currentState = currrentState
     },
-  },
-  actions: {
-    bindUsers: firebaseAction(({ bindFirebaseRef }) => {
-      // return the promise returned by `bindFirebaseRef`
-      console.log('users')
-      bindFirebaseRef('users', db.ref('users'))
-      return
-    }),
-    deleteUser: firebaseAction((context, user) => {
-      db.ref('users').child(user.userKey).remove()
-    }),
-    addNewUser: firebaseAction((context, user) => {
-      db.ref('users').child(user.userKey).update({
-        nickname: user.nickname,
-        emojiColor: user.emojiColor,
-        emojiGender: user.emojiGender,
-        heartEmojiColor: user.heartEmojiColor,
-        notPresentEmojiType: user.notPresentEmojiType,
-        status: 'no-webcam'
-      })
-
-    }),
-    updateUserSettings: firebaseAction((context, user) => {
-      db.ref('users').child(user.userKey).update({
-        nickname: user.nickname,
-        emojiColor: user.emojiColor,
-        emojiGender: user.emojiGender,
-        heartEmojiColor: user.heartEmojiColor,
-        notPresentEmojiType: user.notPresentEmojiType,
-      })
-    }),
-
+    setSigns(state, newSigns) {
+      state.signs = newSigns
+    }
   },
   modules: {}
 })
