@@ -22,7 +22,7 @@
 
         <v-btn tabindex="0" color="primary" @click="step = 2">Continue</v-btn>
 
-        <v-btn text @click="sendCloseEvent" >Cancel</v-btn>
+        <v-btn text @click="closeClicked" >Cancel</v-btn>
       </v-stepper-content>
       <v-stepper-content step="2">
         <div>
@@ -35,15 +35,15 @@
           src="https://us.123rf.com/450wm/microone/microone1907/microone190700323/128173861-stock-vector-video-conference-people-group-on-computer-screen-taking-with-colleague-video-conferencing-and-online.jpg?ver=6"
           max-height="250" />
 
-        <v-btn tabindex="0" color="primary" @click="step = 2">Continue</v-btn>
-
-        <v-btn text @click="sendCloseEvent" >Cancel</v-btn>
+        <v-btn tabindex="0" color="primary" @click="closeClicked">START GAME</v-btn>
       </v-stepper-content>
     </v-stepper-items>
   </v-stepper>
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
   export default {
     data() {
       return {
@@ -52,11 +52,10 @@
       };
     },
     methods: {
-      sendCloseEvent: function () {
-        this.step = 2
-        this.newUser = false
-        this.$emit("close-dialogue", {nickname: this.nickname, emojiColor: this.emojiColor, emojiGender: this.emojiGender, 
-                                      heartEmojiColor: this.heartEmojiColor, notPresentEmojiType: this.notPresentEmojiType});
+      ...mapMutations(["startNewGame"]),
+      closeClicked: function () {
+        this.startNewGame();
+        this.dialog.value = false;
       }
     }
   };

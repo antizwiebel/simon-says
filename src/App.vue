@@ -18,6 +18,8 @@
       </span>
 
       <v-spacer></v-spacer>
+      <span>LIVES: </span>
+      <span v-for="n in livesLeft" v-bind:key="n">{{ n }} </span>
     </v-app-bar>
 
     <v-main>
@@ -29,7 +31,8 @@
 <script>
 
 import {
-    mapMutations
+    mapMutations,
+    mapState
   } from 'vuex'
 
 export default {
@@ -38,6 +41,10 @@ export default {
   data: () => ({
     //
   }),
+
+  computed: {
+      ...mapState(['livesLeft'])
+  },
 
   methods: {
     ...mapMutations(['setOpenDialog']),

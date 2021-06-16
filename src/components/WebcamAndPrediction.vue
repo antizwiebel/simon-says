@@ -1,6 +1,20 @@
 <template>
 
 <v-card color="transparent" elevation="12">
+  <v-btn
+  class="mt-10"
+  color="primary"
+  elevation="4"
+  fab
+  top
+  absolute
+  right
+  @click="toggleMusicPlaying"
+><v-icon
+        class="white--text mr-2 center"
+      >
+        {{ this.musicPlaying ? "mdi-volume-high" : "mdi-volume-off" }}
+      </v-icon></v-btn>
 <v-row
       align="center"
       justify="center"
@@ -134,7 +148,7 @@
   <v-row
       align="center"
       justify="center"
-      v-show="currentSignIndex >= signsAnswered.length"
+      v-show="currentSignIndex >= numberOfSigns"
     >
     <v-card
           flat
@@ -160,17 +174,17 @@
   <v-row
       align="center"
       justify="center"
-      v-show="currentSignIndex >= signsAnswered.length"
+      v-show="currentSignIndex >= numberOfSigns"
     >
     <v-card
           flat
           height="100%"
         >
-        <v-card-title>Want to try again?</v-card-title>
+        <v-card-title>{{ newGameTitle }}</v-card-title>
           <v-card-text >
             <v-row class="text-center">
               <v-col>
-                <v-btn tabindex="0" color="primary" @click="newGame">Play again</v-btn>
+                <v-btn tabindex="0" color="primary" @click="newGame">{{ newGameActionTitle }}</v-btn>
               </v-col>
             </v-row>
           </v-card-text>
@@ -218,33 +232,43 @@ export default {
           inputSign: null
         },
         {
-          correctSign: "Heart",
+          correctSign: null,
           inputSign: null
         },
         {
-          correctSign: "Heart",
+          correctSign: null,
           inputSign: null
         }
       ],
       currentSignIndex: 0,
+      numberOfSigns: 3,
     };
   },
   watch: {
     currentPrediction(prediction) {
       if (
         this.currentState !== prediction.className &&
-        prediction.noOfConsecutiveLoops > 20 && this.currentSign === null
+        prediction.noOfConsecutiveLoops > 2 && this.currentSign === null
       ) {
         this.setCurrentState(prediction.className);
-        if (prediction.className !== "Neutral" && this.currentSignIndex < this.signsAnswered.length) {
+        if (prediction.className !== "Neutral" && this.currentSignIndex < this.numberOfSigns) {
           var answeredSign = this.signsAnswered[this.currentSignIndex];
           answeredSign.inputSign = prediction.className;
           this.$set(this.signsAnswered, this.currentSignIndex, answeredSign)
           this.currentSignIndex ++;
+          this.decreaseLivesOnGameEnd();
         }
         
       }
-    }
+    },
+    hasStartedNewGame(isNewGame) {
+      if (isNewGame === true) {
+        this.currentSignIndex = 0;
+        this.numberOfSigns = 3;
+        this.createSignPattern();
+        this.newGameStarted();
+      }
+    },
   },
   created() {
     this.requestWebcam();
@@ -255,7 +279,9 @@ export default {
       "predictions",
       "userKey",
       "currentState",
-      "signs"
+      "signs",
+      "hasStartedNewGame",
+      "musicPlaying"
     ]),
     ...mapGetters(["classWithHighestValueFromLatestPrediction"]),
     getProgressBarValue: function () {
@@ -268,11 +294,30 @@ export default {
     congratulationMessage: function () {
       var correctQuestions = 0;
       this.signsAnswered.forEach(element => correctQuestions += element.correctSign === element.inputSign ? 1 : 0);
-      return "You got " + correctQuestions + " out of " + this.signsAnswered.length + " right!";
+      return "You got " + correctQuestions + " out of " + this.numberOfSigns + " right!";
+    },
+    isNewGame: function () {
+      var correctQuestions = 0;
+      this.signsAnswered.forEach(element => correctQuestions += element.correctSign === element.inputSign ? 1 : 0);
+      return true;
+    },
+    newGameTitle: function () {
+      return this.hasClearedLevel ? "Progress to next level?" : "Want to try again?";
+    },
+    newGameActionTitle: function () {
+      return this.hasClearedLevel ? "Next Level" : "Try Again" ;
+    },
+    correctQuestions: function () {
+      var correctQuestions = 0;
+      this.signsAnswered.forEach(element => correctQuestions += element.correctSign === element.inputSign ? 1 : 0);
+      return correctQuestions;
+    },
+    hasClearedLevel: function () {
+      return this.correctQuestions >= this.numberOfSigns
     }
   },
   methods: {
-    ...mapMutations(["setPrediction", "setCurrentState", "setSigns"]),
+    ...mapMutations(["setPrediction", "setCurrentState", "setSigns", "decreaseLives", "newGameStarted", "toggleMusicPlaying"]),
     async requestWebcam() {
       var that = this;
       const modelURL = `${this.url}model.json`;
@@ -289,8 +334,6 @@ export default {
       await this.webcam.play();
       this.webcamSetupFinished = true;
 
-      this.createSignPattern();
-
       setTimeout(function () {
         const webcamContainer = that.$refs.webcam;
         webcamContainer.appendChild(that.webcam.canvas);
@@ -299,14 +342,27 @@ export default {
     },
     newGame: function() {
       this.currentSignIndex = 0;
+      if (this.hasClearedLevel) {
+        this.numberOfSigns ++;
+      }
+      
       this.createSignPattern();
+    },
+    decreaseLivesOnGameEnd: function() {
+      if (this.currentSignIndex >= this.numberOfSigns) {
+        var correctQuestions = 0;
+        this.signsAnswered.forEach(element => correctQuestions += element.correctSign === element.inputSign ? 1 : 0);
+        if (correctQuestions !== this.numberOfSigns) {
+          this.decreaseLives();
+        }
+      }
     },
     createSignPattern: function() {
       var that = this;
-      var myArray = new Array(3);
+      var myArray = new Array(this.numberOfSigns);
       var lastIndex = -1;
-      for (let index = 0; index < 4; index++) {
-        if (index === 3) {
+      for (let index = 0; index < this.numberOfSigns + 1; index++) {
+        if (index === this.numberOfSigns) {
           setTimeout(
               function(){
                 that.currentSign = null;
@@ -318,17 +374,19 @@ export default {
             randomSignIndex = Math.floor(Math.random()*this.signsImplemented.length);
           } 
           lastIndex = randomSignIndex;
-          myArray[index] = this.signsImplemented[randomSignIndex];
-          this.signsAnswered[index].correctSign = this.signsImplemented[randomSignIndex].className;
-          this.signsAnswered[index].inputSign = null;
+          var sign = {correctSign: this.signsImplemented[randomSignIndex], inputSign: null};
+          myArray[index] = sign;
+          
+          this.$set(this.signsAnswered, this.index, sign);
           setTimeout(
               function(){
-                that.currentSign = myArray[index];
+                that.currentSign = myArray[index].correctSign;
               }
           , index * 2000);
         }
       }
       this.setSigns(myArray);
+      this.signsAnswered = myArray;
     },
     async loop() {
       var that = this;

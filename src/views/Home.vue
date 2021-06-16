@@ -1,16 +1,24 @@
 <template>
   <v-container>
+    
     <v-dialog
-      v-model="openDialog"
+      v-model="isNewUser"
       width="800"
-      :persistent="!newUser"
+      persistent
     >
-      <TutorialStepper @close-dialogue="handleCloseDialogue" :newUser="newUser"></TutorialStepper>
+      <TutorialStepper @close-dialogue="handleCloseDialogue"></TutorialStepper>
+    </v-dialog>
+    <v-dialog
+      v-model="isGameOver"
+      width="800"
+      persistent
+    >
+      <GameOverDialog></GameOverDialog>
     </v-dialog>
         <WebcamAndPrediction />
 
         <audio id="audiotag1" src="../assets/Monkeys-Spinning-Monkeys.mp3" preload="auto"></audio>
-        <v-btn text @click="play_single_sound" ref="audioBtn">Play that funky music</v-btn>
+        
   </v-container>
 </template>
 
@@ -20,6 +28,7 @@ import '@tensorflow/tfjs'
 //import Peers from '../components/Peers.vue'
 //import Chat from '../components/Chat.vue'
 import TutorialStepper from '../components/TutorialStepper.vue'
+import GameOverDialog from '../components/GameOverDialog.vue'
 import WebcamAndPrediction from '../components/WebcamAndPrediction.vue'
 
 import {
@@ -29,7 +38,7 @@ import {
 
 export default {
   components: {
-     TutorialStepper, WebcamAndPrediction
+     TutorialStepper, WebcamAndPrediction, GameOverDialog
   },
   data() {
     return {
@@ -45,6 +54,15 @@ export default {
     window.addEventListener('beforeunload', this.leaving)
   },
 
+  watch: {
+    musicPlaying(isMusicPlaying) {
+      if (isMusicPlaying === true) {
+        document.getElementById('audiotag1').play();
+      } else {
+        document.getElementById('audiotag1').pause();
+      }
+    }
+  },
   methods: {
     ...mapMutations(['setUserKey', 'setEmojiSettings', 'setOpenDialog']),
       
@@ -69,13 +87,12 @@ export default {
       this.setEmojiSettings({emojiGender, emojiColor, heartEmojiColor, notPresentEmojiType})
       
     },
-    play_single_sound: function() {
-      document.getElementById('audiotag1').pause();
-      document.getElementById('audiotag1').play();
-    }
   },
   computed: {
-    ...mapState(['users', 'currentPrediction', 'openDialog']),
+    ...mapState(['isNewUser', 'currentPrediction', 'openDialog', 'livesLeft', 'hasStartedNewGame', 'musicPlaying']),
+    isGameOver: function () {
+      return this.livesLeft <= 0;
+    },
   }
 }
 </script>

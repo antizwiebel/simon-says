@@ -5,8 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    users: [],
-    userKey: '',
+    isNewUser: true,
     // TM response with all classes and corresponding probabilities
     predictions: [],
     // current prediction (className, probability, noOfConsecutiveLoops)
@@ -15,6 +14,9 @@ export default new Vuex.Store({
     currentState: 'no-webcam',
     openDialog: 'true',
     signs: [],
+    livesLeft: 3,
+    hasStartedNewGame: false,
+    musicPlaying: false
   },
   getters: {
 
@@ -59,6 +61,21 @@ export default new Vuex.Store({
     },
     setSigns(state, newSigns) {
       state.signs = newSigns
+    },
+    decreaseLives(state) {
+      state.livesLeft -= 1;
+    },
+    startNewGame(state) {
+      state.isNewUser = false;
+      state.hasStartedNewGame = true;
+      state.livesLeft = 3;
+      state.musicPlaying = true;
+    },
+    newGameStarted(state) {
+      state.hasStartedNewGame = false;
+    },
+    toggleMusicPlaying(state) {
+      state.musicPlaying = !state.musicPlaying;
     }
   },
   modules: {}
