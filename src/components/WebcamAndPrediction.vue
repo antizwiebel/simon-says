@@ -85,7 +85,7 @@
               height="100%"
               :class="
                 predictionClass.className === currentPrediction.className
-                  ? 'secondary'
+                  ? 'primary'
                   : 'primaryAccent3'
               "
             >
@@ -140,7 +140,7 @@
                       v-else-if="sign.correctSign.className !== sign.inputSign"
                       tile
                       size="30"
-                      color="primary"
+                      color="primaryAccent1"
                     >
                     </v-avatar>
                   </v-col>
@@ -175,7 +175,7 @@
                   color="secondary"
                 ></v-img>
               </v-avatar>
-              <v-avatar v-else size="100" color="primary">
+              <v-avatar v-else size="100" color="primaryAccent1">
                 <v-img
                   contain
                   max-height="80"
@@ -264,7 +264,7 @@ export default {
     currentPrediction(prediction) {
       if (
         this.currentState !== prediction.className &&
-        prediction.noOfConsecutiveLoops > 10 &&
+        prediction.noOfConsecutiveLoops > 7 &&
         this.currentSign === null
       ) {
         this.setCurrentState(prediction.className);
@@ -290,9 +290,6 @@ export default {
       }
     },
   },
-  // created() {
-  //   this.requestWebcam();
-  // },
   computed: {
     ...mapState([
       "currentPrediction",

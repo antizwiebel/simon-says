@@ -7,17 +7,17 @@ export default new Vuetify({
     theme: {
         themes: {
           light: {
-            primary: '#957FEF',
-            primaryAccent1: '#739793', // used for sign 1 color
+            primary: '#FF8BA9', 
+            primaryAccent1: '#A00040', // wrong answer
             primaryAccent2: '#FE5F55',
-            primaryAccent3: '#E0D9FE',
-            linen: '#32a852',
+            primaryAccent3: '#EFD9CE',
+            linen: '#32a852', //correct answer 
             linenDarker: '#C4BDAC',
             linenLighter: '#e1ded5',
             linenLighter2: '#514854',
-            secondary:  '#B79CED',
-            accent: '#DEC0F1',
-            background: '#EFD9CE'
+            secondary:  '#D07EAF',
+            accent: '#F7E6F1',
+            background: '#FFF3F8'
           },
         },
     }
