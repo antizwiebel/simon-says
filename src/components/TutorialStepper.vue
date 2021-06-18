@@ -11,28 +11,25 @@
     <v-stepper-items>
       <v-stepper-content step="1">
         <div>
-          Do you want to chat with your friends or take part in a school meeting, but your wifi can't handle all that
-          video bandwith? Fret no more!
-          Our low-bandwith video chat will analyze your video feed without needing to send all that data to your friends
-          and colleagues. All you need to get started is to choose your preferred emoji style and color!
+          If you feel lost and you need to train your brain, because you cannot focus. You can improve your memory by playing just a single game.
         </div>
+        <br/>
         <v-img aspect-ratio="1.7" contain
-          src="https://us.123rf.com/450wm/microone/microone1907/microone190700323/128173861-stock-vector-video-conference-people-group-on-computer-screen-taking-with-colleague-video-conferencing-and-online.jpg?ver=6"
+          src="https://www.shop-apotheke.com/magazin/familie/wp-content/uploads/2020/05/familienmagazin_memory_955x594.jpg"
           max-height="250" />
-
+        <br/>
         <v-btn tabindex="0" color="primary" @click="step = 2">Continue</v-btn>
 
         <v-btn text @click="closeClicked" >Cancel</v-btn>
       </v-stepper-content>
       <v-stepper-content step="2">
         <div>
-          Do you want to chat with your friends or take part in a school meeting, but your wifi can't handle all that
-          video bandwith? Fret no more!
-          Our low-bandwith video chat will analyze your video feed without needing to send all that data to your friends
-          and colleagues. All you need to get started is to choose your preferred emoji style and color!
+          
+          You have to remember the signs and repeate them. With every correct answer the levels get harder.
+         
         </div>
         <v-img aspect-ratio="1.7" contain
-          src="https://us.123rf.com/450wm/microone/microone1907/microone190700323/128173861-stock-vector-video-conference-people-group-on-computer-screen-taking-with-colleague-video-conferencing-and-online.jpg?ver=6"
+          src="https://images.unsplash.com/photo-1620315188768-150b72a07020?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
           max-height="250" />
 
         <v-btn tabindex="0" color="primary" @click="closeClicked">START GAME</v-btn>

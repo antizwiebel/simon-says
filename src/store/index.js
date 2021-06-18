@@ -15,6 +15,7 @@ export default new Vuex.Store({
     openDialog: 'true',
     signs: [],
     livesLeft: 3,
+    maxLives: 3,
     hasStartedNewGame: false,
     musicPlaying: false
   },
@@ -68,8 +69,8 @@ export default new Vuex.Store({
     startNewGame(state) {
       state.isNewUser = false;
       state.hasStartedNewGame = true;
-      state.livesLeft = 3;
-      state.musicPlaying = true;
+      state.livesLeft = state.maxLives;
+      //state.musicPlaying = true;
     },
     newGameStarted(state) {
       state.hasStartedNewGame = false;

@@ -18,8 +18,11 @@
       </span>
 
       <v-spacer></v-spacer>
-      <span>LIVES: </span>
-      <span v-for="n in livesLeft" v-bind:key="n">{{ n }} </span>
+      <span class="mr-4">LIVES: </span>
+      
+      <span v-for="n in maxLives" v-bind:key="n">
+        <v-icon >{{ getLiveIcon(n) }}</v-icon>
+      </span>
     </v-app-bar>
 
     <v-main>
@@ -43,7 +46,7 @@ export default {
   }),
 
   computed: {
-      ...mapState(['livesLeft'])
+      ...mapState(['livesLeft', 'maxLives']),
   },
 
   methods: {
@@ -52,6 +55,9 @@ export default {
     handleSettiingsClick: function() {
       this.setOpenDialog(true)
     },
+    getLiveIcon (n) {
+        return (n <= this.livesLeft ) ? "mdi-heart" : "mdi-heart-off"; 
+    }
   }
 };
 </script>
