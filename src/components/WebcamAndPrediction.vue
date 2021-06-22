@@ -222,7 +222,7 @@ export default {
       model: null,
       webcam: null,
       webcamIsLoading: false,
-      url: "https://teachablemachine.withgoogle.com/models/EhS4luhaf/",
+      url: "https://teachablemachine.withgoogle.com/models/aWD3VGWNM/",//"https://teachablemachine.withgoogle.com/models/EhS4luhaf/",
       webcamSetupFinished: false,
       signsImplemented: [
         {
@@ -284,9 +284,12 @@ export default {
       if (isNewGame === true) {
         this.currentSignIndex = 0;
         this.numberOfSigns = 3;
-        this.requestWebcam();
+        if (this.webcamSetupFinished === false) {
+          this.requestWebcam();
+        }
         this.createSignPattern();
         this.newGameStarted();
+        this.setCurrentState("Neutral");
       }
     },
   },
@@ -335,7 +338,7 @@ export default {
       return correctQuestions;
     },
     hasClearedLevel: function () {
-      return this.correctQuestions >= this.numberOfSigns;
+      return this.correctQuestions === this.numberOfSigns;
     },
   },
   methods: {
@@ -378,16 +381,8 @@ export default {
       this.createSignPattern();
     },
     decreaseLivesOnGameEnd: function () {
-      if (this.currentSignIndex >= this.numberOfSigns) {
-        var correctQuestions = 0;
-        this.signsAnswered.forEach(
-          (element) =>
-            (correctQuestions +=
-              element.correctSign === element.inputSign ? 1 : 0)
-        );
-        if (correctQuestions !== this.numberOfSigns) {
-          this.decreaseLives();
-        }
+      if (this.currentSignIndex >= this.numberOfSigns && this.hasClearedLevel === false) {
+        this.decreaseLives();
       }
     },
     createSignPattern: function () {

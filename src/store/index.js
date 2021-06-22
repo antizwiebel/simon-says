@@ -10,14 +10,14 @@ export default new Vuex.Store({
     predictions: [],
     // current prediction (className, probability, noOfConsecutiveLoops)
     currentPrediction: {},
-    // state that will be shared with others
     currentState: 'no-webcam',
     openDialog: 'true',
     signs: [],
-    livesLeft: 3,
-    maxLives: 3,
+    livesLeft: 1,
+    maxLives: 1,
     hasStartedNewGame: false,
-    musicPlaying: false
+    musicPlaying: false,
+    isFirstGame: true
   },
   getters: {
 
@@ -70,10 +70,13 @@ export default new Vuex.Store({
       state.isNewUser = false;
       state.hasStartedNewGame = true;
       state.livesLeft = state.maxLives;
-      //state.musicPlaying = true;
+      state.musicPlaying = true;
     },
     newGameStarted(state) {
       state.hasStartedNewGame = false;
+    },
+    firstGameStarted(state) {
+      state.isFirstGame = false;
     },
     toggleMusicPlaying(state) {
       state.musicPlaying = !state.musicPlaying;

@@ -6,7 +6,7 @@
       width="800"
       persistent
     >
-      <TutorialStepper @close-dialogue="handleCloseDialogue"></TutorialStepper>
+      <TutorialStepper></TutorialStepper>
     </v-dialog>
     <v-dialog
       v-model="isGameOver"
@@ -25,8 +25,6 @@
 <script>
 import '@tensorflow/tfjs'
 
-//import Peers from '../components/Peers.vue'
-//import Chat from '../components/Chat.vue'
 import TutorialStepper from '../components/TutorialStepper.vue'
 import GameOverDialog from '../components/GameOverDialog.vue'
 import WebcamAndPrediction from '../components/WebcamAndPrediction.vue'
@@ -45,7 +43,6 @@ export default {
       dialog: true,
       model: null,
       url: 'https://teachablemachine.withgoogle.com/models/erVKbrLsV/',
-      newUser: true
     }
   },
 
@@ -77,15 +74,6 @@ export default {
         default:
           return 'mdi-exclamation-thick'
       }
-    },
-    handleCloseDialogue: function({nickname, emojiColor, emojiGender, heartEmojiColor, notPresentEmojiType}) {
-      this.nickname = nickname
-      this.emojiColor = emojiColor
-      this.emojiGender = emojiGender
-      this.dialog = false
-      this.setOpenDialog(false)
-      this.setEmojiSettings({emojiGender, emojiColor, heartEmojiColor, notPresentEmojiType})
-      
     },
   },
   computed: {
