@@ -13,8 +13,8 @@ export default new Vuex.Store({
     currentState: 'no-webcam',
     openDialog: 'true',
     signs: [],
-    livesLeft: 1,
-    maxLives: 1,
+    livesLeft: 3,
+    maxLives: 3,
     hasStartedNewGame: false,
     musicPlaying: false,
     isFirstGame: true
